@@ -7,6 +7,7 @@ Project backend API menggunakan **Bun**, **ElysiaJS**, **Drizzle ORM**, dan **My
 - **Web Framework:** [ElysiaJS](https://elysiajs.com)
 - **ORM:** [Drizzle ORM](https://orm.drizzle.team)
 - **Database:** MySQL (driver `mysql2`)
+- **Security:** `bcryptjs` (Password hashing)
 
 ## Struktur Project
 ```text
@@ -15,6 +16,10 @@ Project backend API menggunakan **Bun**, **ElysiaJS**, **Drizzle ORM**, dan **My
 │   ├── db/
 │   │   ├── index.ts      # Koneksi database MySQL dengan Drizzle
 │   │   └── schema.ts     # Definisi schema/tabel (users)
+│   ├── routes/
+│   │   └── user-route.ts # Routing API ElysiaJS
+│   ├── services/
+│   │   └── user-services.ts # Logic bisnis aplikasi
 │   └── index.ts          # Entry point server ElysiaJS
 ├── .env                  # Variabel environment (koneksi DB, port)
 ├── .env.example          # Contoh variabel environment
@@ -64,5 +69,24 @@ PORT=3000
 ## Endpoints Tersedia
 - `GET /` : Pesan sambutan server
 - `GET /health` : Health check status
-- `GET /users` : Mengambil daftar semua user dari database
-- `POST /users` : Menambahkan user baru (Body: `{ "name": "...", "email": "..." }`)
+- `POST /api/users` : Registrasi user baru
+  - **Body**:
+    ```json
+    {
+      "name": "Salapink",
+      "email": "salapink@localhost",
+      "password": "rahasia"
+    }
+    ```
+  - **Success Response (200 OK)**:
+    ```json
+    {
+      "data": "OK"
+    }
+    ```
+  - **Error Response (400 Bad Request)**:
+    ```json
+    {
+      "error": "email sudah terdaftar"
+    }
+    ```
