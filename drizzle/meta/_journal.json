@@ -15,6 +15,13 @@
       "when": 1787582130874,
       "tag": "0001_clear_talisman",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1787609884170,
+      "tag": "0002_smart_morg",
+      "breakpoints": true
     }
   ]
 }
