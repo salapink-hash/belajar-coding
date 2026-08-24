@@ -13,6 +13,11 @@ const mockDb = {
       where: () => ({
         limit: () => Promise.resolve(mockDbUsers),
       }),
+      innerJoin: () => ({
+        where: () => ({
+          limit: () => Promise.resolve(mockDbUsers),
+        }),
+      }),
     }),
   }),
   insert: () => mockInsert(),
@@ -22,7 +27,7 @@ mock.module("../src/db", () => ({
   db: mockDb,
 }));
 
-const { loginUser } = await import("../src/services/user-services");
+const { loginUser, getCurrentUser } = await import("../src/services/user-services");
 
 describe("user-services: loginUser", () => {
   it("should throw error if user not found", async () => {
@@ -75,3 +80,30 @@ describe("user-services: loginUser", () => {
     );
   });
 });
+
+describe("user-services: getCurrentUser", () => {
+  it("should throw Unauthorized if token not found", async () => {
+    mockDbUsers.length = 0;
+    expect(getCurrentUser("invalid-token")).rejects.toThrow("Unauthorized");
+  });
+
+  it("should return user profile if token is valid", async () => {
+    const createdAt = new Date("2024-01-01T00:00:00.000Z");
+    mockDbUsers.length = 0;
+    mockDbUsers.push({
+      id: 1,
+      name: "Salapink",
+      email: "salapink@localhost",
+      createdAt,
+    });
+
+    const user = await getCurrentUser("valid-token");
+    expect(user).toEqual({
+      id: 1,
+      name: "Salapink",
+      email: "salapink@localhost",
+      created_at: createdAt,
+    });
+  });
+});
+
